@@ -1,0 +1,74 @@
+[
+  {
+    "analytical_success": {
+      "0.50": 0.6875,
+      "0.65": 0.6875,
+      "0.77": 0.6875,
+      "0.80": 0.6875,
+      "0.90": 0.6875,
+      "1.00": 0.6875
+    },
+    "boxes_used": 0,
+    "family": "majority",
+    "file": "majority_n2_4_k_3.npz",
+    "formula_notes": "Exact majority baseline with tie->0; independent of p_rule.",
+    "k_box": 3,
+    "n2": 4,
+    "name": "majority_n2_4_k_3",
+    "unused_boxes": 3
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.63671875,
+      "0.65": 0.63671875,
+      "0.77": 0.63671875,
+      "0.80": 0.63671875,
+      "0.90": 0.63671875,
+      "1.00": 0.63671875
+    },
+    "boxes_used": 0,
+    "family": "majority",
+    "file": "majority_n2_8_k_3.npz",
+    "formula_notes": "Exact majority baseline with tie->0; independent of p_rule.",
+    "k_box": 3,
+    "n2": 8,
+    "name": "majority_n2_8_k_3",
+    "unused_boxes": 3
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.63671875,
+      "0.65": 0.63671875,
+      "0.77": 0.63671875,
+      "0.80": 0.63671875,
+      "0.90": 0.63671875,
+      "1.00": 0.63671875
+    },
+    "boxes_used": 0,
+    "family": "majority",
+    "file": "majority_n2_8_k_1.npz",
+    "formula_notes": "Exact majority baseline with tie->0; independent of p_rule.",
+    "k_box": 1,
+    "n2": 8,
+    "name": "majority_n2_8_k_1",
+    "unused_boxes": 1
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.5,
+      "0.65": 0.545,
+      "0.77": 0.6458,
+      "0.80": 0.68,
+      "0.90": 0.8200000000000001,
+      "1.00": 1.0
+    },
+    "boxes_used": 3,
+    "family": "pyramid",
+    "file": "pyramid_n2_4_k_3.npz",
+    "formula_notes": "Depth-2 pyramid composition: (1 + (2p-1)^2)/2.",
+    "k_box": 3,
+    "n2": 4,
+    "name": "pyramid_n2_4_k_3",
+    "unused_boxes": 0
+  }
+]

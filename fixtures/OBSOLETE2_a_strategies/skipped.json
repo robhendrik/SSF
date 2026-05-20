@@ -1,0 +1,184 @@
+[
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 4,
+      "k_box": 1,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "vertical",
+      "n2": 4,
+      "k_box": 1,
+      "split": null,
+      "depth_s": 1,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 2 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 4,
+      "k_box": 2,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 2."
+  },
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 8,
+      "k_box": 1,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 7 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "horizontal",
+      "n2": 8,
+      "k_box": 1,
+      "split": 4,
+      "depth_s": null,
+      "order": "maj_pyr",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "horizontal",
+      "n2": 8,
+      "k_box": 1,
+      "split": 4,
+      "depth_s": null,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "vertical",
+      "n2": 8,
+      "k_box": 1,
+      "split": null,
+      "depth_s": 1,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 4 boxes, got 1."
+  },
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 8,
+      "k_box": 2,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 7 boxes, got 2."
+  },
+  {
+    "spec": {
+      "family": "horizontal",
+      "n2": 8,
+      "k_box": 2,
+      "split": 4,
+      "depth_s": null,
+      "order": "maj_pyr",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 2."
+  },
+  {
+    "spec": {
+      "family": "horizontal",
+      "n2": 8,
+      "k_box": 2,
+      "split": 4,
+      "depth_s": null,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 3 boxes, got 2."
+  },
+  {
+    "spec": {
+      "family": "vertical",
+      "n2": 8,
+      "k_box": 2,
+      "split": null,
+      "depth_s": 1,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 4 boxes, got 2."
+  },
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 8,
+      "k_box": 3,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 7 boxes, got 3."
+  },
+  {
+    "spec": {
+      "family": "vertical",
+      "n2": 8,
+      "k_box": 3,
+      "split": null,
+      "depth_s": 1,
+      "order": "pyr_maj",
+      "tie_bandwidth": 0,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 4 boxes, got 3."
+  },
+  {
+    "spec": {
+      "family": "pyramid",
+      "n2": 8,
+      "k_box": 5,
+      "split": null,
+      "depth_s": null,
+      "order": null,
+      "tie_bandwidth": null,
+      "tie_value": 0
+    },
+    "reason": "k_box too small: requires at least 7 boxes, got 5."
+  }
+]

@@ -1,0 +1,184 @@
+[
+  {
+    "analytical_success": {
+      "0.50": 0.625,
+      "0.65": 0.6625,
+      "0.77": 0.6925,
+      "1.00": 0.75
+    },
+    "boxes_used": 1,
+    "c_tie": 0,
+    "family": "horizontal",
+    "file": "hybrid_horiz_majority_left_pyramid_right_n2_4_k_3_split_2_2_b_0.npz",
+    "formula_notes": "Horizontal closed form with exact tie probability and P_pyr(depth=1,p_rule).",
+    "k_box": 3,
+    "majority_len": 2,
+    "n2": 4,
+    "name": "hybrid_horiz_majority_left_pyramid_right_n2_4_k_3_split_2_2_b_0",
+    "order": "majority_left_pyramid_right",
+    "pyramid_len": 2,
+    "split": [
+      2,
+      2
+    ],
+    "tie_bandwidth": 0,
+    "unused_boxes": 2
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.625,
+      "0.65": 0.6625,
+      "0.77": 0.6925,
+      "1.00": 0.75
+    },
+    "boxes_used": 1,
+    "c_tie": 0,
+    "family": "horizontal",
+    "file": "hybrid_horiz_pyramid_left_majority_right_n2_4_k_3_split_2_2_b_0.npz",
+    "formula_notes": "Horizontal closed form with exact tie probability and P_pyr(depth=1,p_rule).",
+    "k_box": 3,
+    "majority_len": 2,
+    "n2": 4,
+    "name": "hybrid_horiz_pyramid_left_majority_right_n2_4_k_3_split_2_2_b_0",
+    "order": "pyramid_left_majority_right",
+    "pyramid_len": 2,
+    "split": [
+      2,
+      2
+    ],
+    "tie_bandwidth": 0,
+    "unused_boxes": 2
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.5,
+      "0.65": 0.5750000000000001,
+      "0.77": 0.635,
+      "1.00": 0.75
+    },
+    "boxes_used": 2,
+    "c_tie": 0,
+    "family": "vertical_pyr_maj",
+    "file": "hybrid_vert_pyr_maj_n2_4_k_3_s_1_b_0.npz",
+    "formula_notes": "Approximate vertical pyr/maj closed form: P=C*Pp+(1-C)*(1-Pp), C from exact majority on apex length 2.",
+    "k_box": 3,
+    "n2": 4,
+    "name": "hybrid_vert_pyr_maj_n2_4_k_3_s_1_b_0",
+    "s": 1,
+    "tie_bandwidth": 0,
+    "unused_boxes": 1
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.5,
+      "0.65": 0.5750000000000001,
+      "0.77": 0.635,
+      "1.00": 0.75
+    },
+    "boxes_used": 1,
+    "c_tie": 0,
+    "family": "vertical_maj_pyr",
+    "file": "hybrid_vert_maj_pyr_n2_4_k_3_s_1_b_0.npz",
+    "formula_notes": "Approximate vertical maj/pyr closed form: P=C*Pp+(1-C)*(1-Pp), C from exact majority on block size 2.",
+    "k_box": 3,
+    "n2": 4,
+    "name": "hybrid_vert_maj_pyr_n2_4_k_3_s_1_b_0",
+    "s": 1,
+    "tie_bandwidth": 0,
+    "unused_boxes": 2
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.59375,
+      "0.65": 0.6021875,
+      "0.77": 0.6210875,
+      "1.00": 0.6875
+    },
+    "boxes_used": 3,
+    "c_tie": 0,
+    "family": "horizontal",
+    "file": "hybrid_horiz_majority_left_pyramid_right_n2_8_k_3_split_4_4_b_0.npz",
+    "formula_notes": "Horizontal closed form with exact tie probability and P_pyr(depth=2,p_rule).",
+    "k_box": 3,
+    "majority_len": 4,
+    "n2": 8,
+    "name": "hybrid_horiz_majority_left_pyramid_right_n2_8_k_3_split_4_4_b_0",
+    "order": "majority_left_pyramid_right",
+    "pyramid_len": 4,
+    "split": [
+      4,
+      4
+    ],
+    "tie_bandwidth": 0,
+    "unused_boxes": 0
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.59375,
+      "0.65": 0.6021875,
+      "0.77": 0.6210875,
+      "1.00": 0.6875
+    },
+    "boxes_used": 3,
+    "c_tie": 0,
+    "family": "horizontal",
+    "file": "hybrid_horiz_pyramid_left_majority_right_n2_8_k_3_split_4_4_b_0.npz",
+    "formula_notes": "Horizontal closed form with exact tie probability and P_pyr(depth=2,p_rule).",
+    "k_box": 3,
+    "majority_len": 4,
+    "n2": 8,
+    "name": "hybrid_horiz_pyramid_left_majority_right_n2_8_k_3_split_4_4_b_0",
+    "order": "pyramid_left_majority_right",
+    "pyramid_len": 4,
+    "split": [
+      4,
+      4
+    ],
+    "tie_bandwidth": 0,
+    "unused_boxes": 0
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.5,
+      "0.65": 0.5225000000000001,
+      "0.77": 0.5729000000000001,
+      "1.00": 0.75
+    },
+    "boxes_used": 3,
+    "c_tie": 0,
+    "family": "vertical_maj_pyr",
+    "file": "hybrid_vert_maj_pyr_n2_8_k_3_s_2_b_0.npz",
+    "formula_notes": "Approximate vertical maj/pyr closed form: P=C*Pp+(1-C)*(1-Pp), C from exact majority on block size 2.",
+    "k_box": 3,
+    "n2": 8,
+    "name": "hybrid_vert_maj_pyr_n2_8_k_3_s_2_b_0",
+    "s": 2,
+    "tie_bandwidth": 0,
+    "unused_boxes": 0
+  },
+  {
+    "analytical_success": {
+      "0.50": 0.55859375,
+      "0.65": 0.587890625,
+      "0.77": 0.611328125,
+      "1.00": 0.65625
+    },
+    "boxes_used": 1,
+    "c_tie": 0,
+    "family": "horizontal",
+    "file": "hybrid_horiz_majority_left_pyramid_right_n2_8_k_1_split_6_2_b_2.npz",
+    "formula_notes": "Horizontal closed form with exact tie probability and P_pyr(depth=1,p_rule).",
+    "k_box": 1,
+    "majority_len": 6,
+    "n2": 8,
+    "name": "hybrid_horiz_majority_left_pyramid_right_n2_8_k_1_split_6_2_b_2",
+    "order": "majority_left_pyramid_right",
+    "pyramid_len": 2,
+    "split": [
+      6,
+      2
+    ],
+    "tie_bandwidth": 2,
+    "unused_boxes": 0
+  }
+]
