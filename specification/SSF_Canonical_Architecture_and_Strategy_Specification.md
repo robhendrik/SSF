@@ -1,6 +1,19 @@
 
 # SSF Canonical Architecture and Strategy Specification
 
+## Read and follow:
+docs/architecture/SSF_Canonical_Architecture_and_Strategy_Specification.md
+
+This document is authoritative for:
+- fixture naming
+- evaluator abstraction
+- optimizer structure
+- canonical ownership
+- migration policy
+
+Do not deviate from it.
+Do not recreate deprecated generators or naming schemes.
+
 ## Overview
 
 This document consolidates the canonical SSF architecture, fixture contracts,
