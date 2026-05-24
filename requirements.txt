@@ -1,0 +1,10 @@
+# Core runtime dependencies (kept intentionally flexible)
+numpy>=1.24
+numba>=0.59
+matplotlib>=3.7
+
+# Development / test
+pytest>=7.4
+
+# Documentation
+mkdocs>=1.6

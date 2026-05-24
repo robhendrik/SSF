@@ -1,3 +1,5 @@
+"""Evaluation cache records, policy controls, replacement logic, and persistence APIs."""
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field

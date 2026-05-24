@@ -1,3 +1,5 @@
+"""Backend-agnostic exhaustive and beam search optimizers over canonical strategy candidates."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

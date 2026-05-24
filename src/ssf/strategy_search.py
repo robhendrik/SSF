@@ -1,3 +1,5 @@
+"""Legal strategy enumeration and exhaustive ranking over canonical HybridStrategySpec candidates."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

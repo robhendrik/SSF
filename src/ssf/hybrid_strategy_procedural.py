@@ -1,3 +1,5 @@
+"""Procedural strategy execution equivalent to canonical dense strategy semantics."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

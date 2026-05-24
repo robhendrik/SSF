@@ -1,3 +1,5 @@
+"""Canonical strategy schema, validation rules, and naming for SSF A-side specs."""
+
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass

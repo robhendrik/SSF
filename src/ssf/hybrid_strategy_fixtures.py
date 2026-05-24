@@ -1,4 +1,6 @@
-﻿from __future__ import annotations
+﻿"""Dense fixture construction and serialization for canonical HybridStrategySpec strategies."""
+
+from __future__ import annotations
 
 import numpy as np
 from dataclasses import dataclass
