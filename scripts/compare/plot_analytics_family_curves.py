@@ -20,6 +20,7 @@ Note on n2=4:
 from __future__ import annotations
 
 import argparse
+import csv
 import math
 import random
 import sys
@@ -45,10 +46,68 @@ from ssf.hybrid_strategy_spec import (
     even_tie_values,
 )
 from ssf.hybrid_strategy_analytics import analytical_win_rate
+from ssf.strategy_search import enumerate_legal_specs, exhaustive_search
 
 DEFAULT_OUTPUT_DIR = SSF_DIR / "results" / "analytics_curves"
 DEFAULT_DPI = 150
 P_VALUES = [round(0.50 + i * 0.01, 2) for i in range(51)]  # 0.50 .. 1.00
+
+
+def _default_search_k_box_values(n2: int) -> list[int]:
+    if n2 == 4:
+        return [1, 3]
+    if n2 == 8:
+        return [1, 3, 7]
+    if n2 == 16:
+        return [1, 3, 7, 15]
+    # Fallback: odd values up to n2-1, plus n2-1.
+    values = [k for k in range(1, n2, 2)]
+    if (n2 - 1) not in values and n2 > 1:
+        values.append(n2 - 1)
+    return sorted(set(values))
+
+
+def _compute_optimal_search_envelope(
+    *,
+    plot_n2: int,
+    p_values: Sequence[float],
+    search_n2_values: list[int] | None,
+    search_k_box_values: list[int] | None,
+    search_families: list[str],
+) -> tuple[list[float], list[tuple[float, float, str]]]:
+    n2_values = [plot_n2] if search_n2_values is None else [int(v) for v in search_n2_values]
+    k_box_values = (
+        _default_search_k_box_values(plot_n2)
+        if search_k_box_values is None
+        else [int(v) for v in search_k_box_values]
+    )
+
+    specs = enumerate_legal_specs(
+        n2_values=n2_values,
+        k_box_values=k_box_values,
+        families=search_families,
+    )
+    if not specs:
+        raise RuntimeError(
+            f"No legal specs found for optimal search overlay (plot_n2={plot_n2})."
+        )
+
+    envelope: list[float] = []
+    summary_rows: list[tuple[float, float, str]] = []
+    for p in p_values:
+        best = exhaustive_search(
+            specs=specs,
+            p_rule=float(p),
+            evaluation_mode="analytical",
+            top_k=1,
+        )
+        if not best:
+            raise RuntimeError(f"No search results produced for p_rule={p}.")
+        winner = best[0]
+        envelope.append(float(winner.success))
+        summary_rows.append((float(p), float(winner.success), winner.candidate_name))
+
+    return envelope, summary_rows
 
 
 # ---------------------------------------------------------------------------
@@ -223,6 +282,11 @@ def generate_figure(
     output_path: Path,
     dpi: int,
     show: bool,
+    show_optimal_search: bool,
+    search_n2_values: list[int] | None,
+    search_k_box_values: list[int] | None,
+    search_families: list[str],
+    optimal_search_summary_output: Path | None,
 ) -> None:
     fixed = build_fixed_specs(n2)
     horiz_random = random_horizontal_specs(n2, 3, exclude=fixed)
@@ -257,6 +321,43 @@ def generate_figure(
             markersize=4,
             label=label,
         )
+
+    if show_optimal_search:
+        envelope, summary_rows = _compute_optimal_search_envelope(
+            plot_n2=n2,
+            p_values=p_values,
+            search_n2_values=search_n2_values,
+            search_k_box_values=search_k_box_values,
+            search_families=search_families,
+        )
+        ax.plot(
+            p_values,
+            envelope,
+            linestyle="-",
+            color="black",
+            linewidth=2.2,
+            label="optimal analytical search",
+        )
+
+        print(f"  Optimal analytical search summary (n2={n2}):")
+        print("    p_rule | best_success | best_candidate_name")
+        for p_rule, best_success, best_name in summary_rows:
+            print(f"    {p_rule:.2f} | {best_success:.12g} | {best_name}")
+
+        if optimal_search_summary_output is not None:
+            summary_path = optimal_search_summary_output
+            if summary_path.suffix == "":
+                summary_path = summary_path / f"optimal_search_summary_n2_{n2}.csv"
+            elif summary_path.name == ".":
+                summary_path = summary_path / f"optimal_search_summary_n2_{n2}.csv"
+
+            summary_path.parent.mkdir(parents=True, exist_ok=True)
+            with summary_path.open("w", encoding="utf-8", newline="") as fh:
+                writer = csv.writer(fh)
+                writer.writerow(["p_rule", "best_success", "best_candidate_name"])
+                for p_rule, best_success, best_name in summary_rows:
+                    writer.writerow([p_rule, best_success, best_name])
+            print(f"  Saved optimal-search summary: {summary_path}")
 
     ax.set_title(f"Analytical Win-Rate Curves — n2={n2}", fontsize=13)
     ax.set_xlabel("p_rule", fontsize=11)
@@ -302,6 +403,50 @@ def _parse_args() -> argparse.Namespace:
         default=False,
         help="Display figures interactively after saving.",
     )
+    parser.add_argument(
+        "--n2-values",
+        nargs="+",
+        type=int,
+        default=[4, 8, 16],
+        help="n2 values to plot. Default: 4 8 16",
+    )
+    parser.add_argument(
+        "--show-optimal-search",
+        action="store_true",
+        default=False,
+        help="Overlay optimal analytical search envelope on each figure.",
+    )
+    parser.add_argument(
+        "--search-n2-values",
+        nargs="+",
+        type=int,
+        default=None,
+        help="Optional search n2 values. Default: same n2 as current plot.",
+    )
+    parser.add_argument(
+        "--search-k-box-values",
+        nargs="+",
+        type=int,
+        default=None,
+        help=(
+            "Optional search k_box values. Defaults by plot n2: "
+            "n2=4 -> 1 3; n2=8 -> 1 3 7; n2=16 -> 1 3 7 15."
+        ),
+    )
+    parser.add_argument(
+        "--search-families",
+        nargs="+",
+        type=str,
+        default=["majority", "pyramid", "horizontal", "vertical"],
+        choices=["majority", "pyramid", "horizontal", "vertical"],
+        help="Families to include in optimal analytical search.",
+    )
+    parser.add_argument(
+        "--optimal-search-summary-output",
+        type=Path,
+        default=None,
+        help="Optional CSV path (or directory) for p_rule,best_success,best_candidate_name summary.",
+    )
     return parser.parse_args()
 
 
@@ -309,11 +454,22 @@ def main() -> None:
     args = _parse_args()
     output_dir: Path = args.output_dir
 
-    n2_values = [4, 8, 16]
+    n2_values = [int(v) for v in args.n2_values]
     for n2 in n2_values:
         print(f"Generating figure for n2={n2} ...")
         output_path = output_dir / f"analytics_curves_n2_{n2}.png"
-        generate_figure(n2, P_VALUES, output_path, dpi=args.dpi, show=args.show)
+        generate_figure(
+            n2,
+            P_VALUES,
+            output_path,
+            dpi=args.dpi,
+            show=args.show,
+            show_optimal_search=args.show_optimal_search,
+            search_n2_values=args.search_n2_values,
+            search_k_box_values=args.search_k_box_values,
+            search_families=[str(v) for v in args.search_families],
+            optimal_search_summary_output=args.optimal_search_summary_output,
+        )
 
     print("Done.")
 
