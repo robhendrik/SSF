@@ -6,8 +6,8 @@ This documentation set covers the canonical SSF architecture and stable API/refe
 
 - [Architecture](architecture/index.md)
 - API
-  - [Source modules](api/src/index.md)
-  - [Scripts](api/scripts/index.md)
+  * [Source modules](api/src/index.md)
+  * [Scripts](api/scripts/index.md)
 
 ## Scope
 
