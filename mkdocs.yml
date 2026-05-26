@@ -11,22 +11,27 @@ docs_dir: docs
 nav:
   - Home: index.md
   - Architecture:
-      - Canonical Architecture: architecture/index.md
+    - Overview: architecture/index.md
   - API:
-      - src:
-          - hybrid_strategy_spec: api/src/hybrid_strategy_spec.md
-          - hybrid_strategy_fixtures: api/src/hybrid_strategy_fixtures.md
-          - hybrid_strategy_procedural: api/src/hybrid_strategy_procedural.md
-          - hybrid_strategy_analytics: api/src/hybrid_strategy_analytics.md
-          - strategy_evaluation: api/src/strategy_evaluation.md
-          - strategy_cache: api/src/strategy_cache.md
-          - strategy_search: api/src/strategy_search.md
-          - strategy_optimizer: api/src/strategy_optimizer.md
-      - scripts:
-          - generate_a_strategy_fixtures.py: api/scripts/generate_a_strategy_fixtures.md
-          - run_exhaustive_strategy_optimizer.py: api/scripts/run_exhaustive_strategy_optimizer.md
-          - run_beam_strategy_optimizer.py: api/scripts/run_beam_strategy_optimizer.md
-          - compare_strategy_evaluation_backends.py: api/scripts/compare_strategy_evaluation_backends.md
-          - validate_strategy_cache_behavior.py: api/scripts/validate_strategy_cache_behavior.md
-          - rebuild_evaluation_cache.py: api/scripts/rebuild_evaluation_cache.md
-          - plot_analytics_family_curves.py: api/scripts/plot_analytics_family_curves.md
+    - Source modules:
+      - Overview: api/src/index.md
+      - spec: api/src/hybrid_strategy_spec.md
+      - fixtures: api/src/hybrid_strategy_fixtures.md
+      - procedural: api/src/hybrid_strategy_procedural.md
+      - analytics: api/src/hybrid_strategy_analytics.md
+      - strategy_evaluation: api/src/strategy_evaluation.md
+      - strategy_cache: api/src/strategy_cache.md
+      - strategy_search: api/src/strategy_search.md
+      - strategy_optimizer: api/src/strategy_optimizer.md
+      - bob_exhaustive: api/src/bob_exhaustive.md
+      - bob_mc: api/src/bob_mc.md
+      - bob_mc_procedural: api/src/bob_mc_procedural.md
+    - Scripts:
+      - Overview: api/scripts/index.md
+      - generate fixtures: api/scripts/generate_a_strategy_fixtures.md
+      - exhaustive optimizer: api/scripts/run_exhaustive_strategy_optimizer.md
+      - beam optimizer: api/scripts/run_beam_strategy_optimizer.md
+      - compare backends: api/scripts/compare_strategy_evaluation_backends.md
+      - validate cache: api/scripts/validate_strategy_cache_behavior.md
+      - rebuild cache: api/scripts/rebuild_evaluation_cache.md
+      - plot analytics: api/scripts/plot_analytics_family_curves.md

@@ -6,8 +6,8 @@ This documentation set covers the canonical SSF architecture and stable API/refe
 
 - [Architecture](architecture/index.md)
 - API
-  - [Source Modules](api/src/hybrid_strategy_spec.md)
-  - [Scripts](api/scripts/generate_a_strategy_fixtures.md)
+  - [Source modules](api/src/index.md)
+  - [Scripts](api/scripts/index.md)
 
 ## Scope
 

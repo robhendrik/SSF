@@ -8,7 +8,7 @@
         
         
         <link rel="shortcut icon" href="../../../img/favicon.ico">
-        <title>compare backends - SSF Canonical API Reference</title>
+        <title>bob_mc_procedural - SSF Canonical API Reference</title>
         <link href="../../../css/bootstrap.min.css" rel="stylesheet">
         <link href="../../../css/fontawesome.min.css" rel="stylesheet">
         <link href="../../../css/brands.min.css" rel="stylesheet">
@@ -55,51 +55,51 @@
     <ul class="dropdown-menu">
             
 <li>
-    <a href="../../src/" class="dropdown-item">Overview</a>
+    <a href="../" class="dropdown-item">Overview</a>
 </li>
             
 <li>
-    <a href="../../src/hybrid_strategy_spec/" class="dropdown-item">spec</a>
+    <a href="../hybrid_strategy_spec/" class="dropdown-item">spec</a>
 </li>
             
 <li>
-    <a href="../../src/hybrid_strategy_fixtures/" class="dropdown-item">fixtures</a>
+    <a href="../hybrid_strategy_fixtures/" class="dropdown-item">fixtures</a>
 </li>
             
 <li>
-    <a href="../../src/hybrid_strategy_procedural/" class="dropdown-item">procedural</a>
+    <a href="../hybrid_strategy_procedural/" class="dropdown-item">procedural</a>
 </li>
             
 <li>
-    <a href="../../src/hybrid_strategy_analytics/" class="dropdown-item">analytics</a>
+    <a href="../hybrid_strategy_analytics/" class="dropdown-item">analytics</a>
 </li>
             
 <li>
-    <a href="../../src/strategy_evaluation/" class="dropdown-item">strategy_evaluation</a>
+    <a href="../strategy_evaluation/" class="dropdown-item">strategy_evaluation</a>
 </li>
             
 <li>
-    <a href="../../src/strategy_cache/" class="dropdown-item">strategy_cache</a>
+    <a href="../strategy_cache/" class="dropdown-item">strategy_cache</a>
 </li>
             
 <li>
-    <a href="../../src/strategy_search/" class="dropdown-item">strategy_search</a>
+    <a href="../strategy_search/" class="dropdown-item">strategy_search</a>
 </li>
             
 <li>
-    <a href="../../src/strategy_optimizer/" class="dropdown-item">strategy_optimizer</a>
+    <a href="../strategy_optimizer/" class="dropdown-item">strategy_optimizer</a>
 </li>
             
 <li>
-    <a href="../../src/bob_exhaustive/" class="dropdown-item">bob_exhaustive</a>
+    <a href="../bob_exhaustive/" class="dropdown-item">bob_exhaustive</a>
 </li>
             
 <li>
-    <a href="../../src/bob_mc/" class="dropdown-item">bob_mc</a>
+    <a href="../bob_mc/" class="dropdown-item">bob_mc</a>
 </li>
             
 <li>
-    <a href="../../src/bob_mc_procedural/" class="dropdown-item">bob_mc_procedural</a>
+    <a href="./" class="dropdown-item active" aria-current="page">bob_mc_procedural</a>
 </li>
     </ul>
   </li>
@@ -109,35 +109,35 @@
     <ul class="dropdown-menu">
             
 <li>
-    <a href="../" class="dropdown-item">Overview</a>
+    <a href="../../scripts/" class="dropdown-item">Overview</a>
 </li>
             
 <li>
-    <a href="../generate_a_strategy_fixtures/" class="dropdown-item">generate fixtures</a>
+    <a href="../../scripts/generate_a_strategy_fixtures/" class="dropdown-item">generate fixtures</a>
 </li>
             
 <li>
-    <a href="../run_exhaustive_strategy_optimizer/" class="dropdown-item">exhaustive optimizer</a>
+    <a href="../../scripts/run_exhaustive_strategy_optimizer/" class="dropdown-item">exhaustive optimizer</a>
 </li>
             
 <li>
-    <a href="../run_beam_strategy_optimizer/" class="dropdown-item">beam optimizer</a>
+    <a href="../../scripts/run_beam_strategy_optimizer/" class="dropdown-item">beam optimizer</a>
 </li>
             
 <li>
-    <a href="./" class="dropdown-item active" aria-current="page">compare backends</a>
+    <a href="../../scripts/compare_strategy_evaluation_backends/" class="dropdown-item">compare backends</a>
 </li>
             
 <li>
-    <a href="../validate_strategy_cache_behavior/" class="dropdown-item">validate cache</a>
+    <a href="../../scripts/validate_strategy_cache_behavior/" class="dropdown-item">validate cache</a>
 </li>
             
 <li>
-    <a href="../rebuild_evaluation_cache/" class="dropdown-item">rebuild cache</a>
+    <a href="../../scripts/rebuild_evaluation_cache/" class="dropdown-item">rebuild cache</a>
 </li>
             
 <li>
-    <a href="../plot_analytics_family_curves/" class="dropdown-item">plot analytics</a>
+    <a href="../../scripts/plot_analytics_family_curves/" class="dropdown-item">plot analytics</a>
 </li>
     </ul>
   </li>
@@ -152,12 +152,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="../run_beam_strategy_optimizer/" class="nav-link">
+                                <a rel="prev" href="../bob_mc/" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="../validate_strategy_cache_behavior/" class="nav-link">
+                                <a rel="next" href="../../scripts/" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -179,17 +179,33 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#compare_strategy_evaluation_backendspy" class="nav-link">compare_strategy_evaluation_backends.py</a>
+            <li class="nav-item" data-bs-level="1"><a href="#bob_mc_procedural" class="nav-link">bob_mc_procedural</a>
               <ul class="nav flex-column">
             <li class="nav-item" data-bs-level="2"><a href="#purpose" class="nav-link">Purpose</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#cli-usage" class="nav-link">CLI usage</a>
+            <li class="nav-item" data-bs-level="2"><a href="#role-in-canonical-architecture" class="nav-link">Role in canonical architecture</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#cli-options" class="nav-link">CLI options</a>
+            <li class="nav-item" data-bs-level="2"><a href="#input-contract" class="nav-link">Input contract</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#evaluation-mode-relation" class="nav-link">Evaluation mode relation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exact-vs-approximate" class="nav-link">Exact vs approximate</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cache-and-evaluator-relationship" class="nav-link">Cache and evaluator relationship</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#must-not-do" class="nav-link">Must not do</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -204,105 +220,47 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="compare_strategy_evaluation_backendspy">compare_strategy_evaluation_backends.py</h1>
-<!-- Generated by scripts/docs/generate_api_docs.py. Do not edit manually. -->
-
+<h1 id="bob_mc_procedural">bob_mc_procedural</h1>
 <h2 id="purpose">Purpose</h2>
-<p>Compare strategy evaluation backends via unified evaluator dispatcher.</p>
-<h2 id="cli-usage">CLI usage</h2>
-<pre><code class="language-bash">python scripts/validate/compare_strategy_evaluation_backends.py --help
-</code></pre>
-<h2 id="cli-options">CLI options</h2>
-<table>
-<thead>
-<tr>
-<th>Option</th>
-<th>Type</th>
-<th>Default</th>
-<th>Required</th>
-<th>Choices</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>--exact-tolerance</td>
-<td>float</td>
-<td>1e-12</td>
-<td>False</td>
-<td></td>
-<td>Maximum allowed absolute difference for exact comparisons.</td>
-</tr>
-<tr>
-<td>--json-output</td>
-<td>Path</td>
-<td>None</td>
-<td>False</td>
-<td></td>
-<td>Optional path to write JSON report.</td>
-</tr>
-<tr>
-<td>--mc-tolerance</td>
-<td>float</td>
-<td>0.03</td>
-<td>False</td>
-<td></td>
-<td>Maximum allowed absolute difference for MC comparisons.</td>
-</tr>
-<tr>
-<td>--n-eval-samples</td>
-<td>int</td>
-<td>20000</td>
-<td>False</td>
-<td></td>
-<td>MC evaluation samples for dense_mc/procedural_mc.</td>
-</tr>
-<tr>
-<td>--n-train-samples</td>
-<td>int</td>
-<td>10000</td>
-<td>False</td>
-<td></td>
-<td>MC training samples for dense_mc/procedural_mc.</td>
-</tr>
-<tr>
-<td>--p-rules</td>
-<td>float</td>
-<td>0.5 0.8 1.0</td>
-<td>False</td>
-<td></td>
-<td>Rule probabilities to evaluate (default: 0.5 0.8 1.0).</td>
-</tr>
-<tr>
-<td>--quiet</td>
-<td>flag</td>
-<td>False</td>
-<td>False</td>
-<td></td>
-<td>Reduce console output.</td>
-</tr>
-<tr>
-<td>--seed</td>
-<td>int</td>
-<td>123</td>
-<td>False</td>
-<td></td>
-<td>Random seed for MC evaluators.</td>
-</tr>
-<tr>
-<td>--spec-set</td>
-<td>str</td>
-<td>tiny</td>
-<td>False</td>
-<td>tiny</td>
-<td>Named canonical spec set to validate.</td>
-</tr>
-</tbody>
-</table>
+<p>Approximate procedural B-side evaluator using Monte Carlo against the procedural A-side contract.</p>
+<h2 id="role-in-canonical-architecture">Role in canonical architecture</h2>
+<p>Implements the procedural Monte Carlo backend used by <code>strategy_evaluation.evaluate_candidate</code> in <code>procedural_mc</code> mode.</p>
+<h2 id="input-contract">Input contract</h2>
+<ul>
+<li>Strategy must expose canonical procedural API:</li>
+<li><code>n2</code></li>
+<li><code>k_box</code></li>
+<li><code>measure_a(box_idx, field, out_a_prefix) -&gt; int</code></li>
+<li><code>comm(field, out_a) -&gt; int</code></li>
+<li>Outputs from <code>measure_a</code> and <code>comm</code> must be binary.</li>
+<li>Sampling parameters and <code>p_rule</code> must be valid.</li>
+</ul>
+<h2 id="evaluation-mode-relation">Evaluation mode relation</h2>
+<ul>
+<li>This module is the engine behind <code>procedural_mc</code>.</li>
+</ul>
+<h2 id="exact-vs-approximate">Exact vs approximate</h2>
+<ul>
+<li>Approximate: two-phase Monte Carlo with the same high-level Bob search structure as dense MC.</li>
+</ul>
+<h2 id="cache-and-evaluator-relationship">Cache and evaluator relationship</h2>
+<ul>
+<li>This module does not own cache policy.</li>
+<li>Cache read/write is handled by <code>strategy_evaluation</code> and <code>strategy_cache</code>.</li>
+</ul>
+<h2 id="must-not-do">Must not do</h2>
+<ul>
+<li>No strategy-name shortcuts.</li>
+<li>No expected-score shortcuts.</li>
+<li>No fixture-name assumptions.</li>
+</ul>
 <h2 id="see-also">See also</h2>
 <ul>
-<li><a href="../../src/hybrid_strategy_spec/">hybrid_strategy_spec</a></li>
-<li><a href="../../src/strategy_evaluation/">strategy_evaluation</a></li>
+<li><a href="../strategy_evaluation/">strategy_evaluation</a></li>
+<li><a href="../strategy_cache/">strategy_cache</a></li>
+<li><a href="../hybrid_strategy_procedural/">hybrid_strategy_procedural</a></li>
+<li><a href="../bob_exhaustive/">bob_exhaustive</a></li>
+<li><a href="../bob_mc/">bob_mc</a></li>
 </ul></div>
             </div>
         </div>
