@@ -1,5 +1,4 @@
 """
-
 Plot closed-form analytical win-rate curves for representative hybrid strategy families.
 
 Produces one figure per n2 value (4, 8, 16) with up to 9 curves:
