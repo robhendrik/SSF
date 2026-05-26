@@ -1,3 +1,17 @@
+"""CLI wrapper for canonical beam-search strategy optimizer workflow.
+
+Architectural role:
+- command-line front end for strategy_optimizer.beam_search_optimizer_with_summaries
+- keeps beam mutation/ranking logic in src/ssf and only handles orchestration/reporting
+
+Invariants:
+- initial candidates come from canonical enumerate_legal_specs
+- evaluation path remains backend-agnostic via dispatcher/cache policy
+
+Failure behavior:
+- invalid arguments or downstream validation failures return non-zero exit
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -24,6 +38,7 @@ DEFAULT_FAMILIES = ["majority", "pyramid", "horizontal", "vertical"]
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for beam optimizer execution."""
     parser = argparse.ArgumentParser(
         description="Run backend-agnostic beam search strategy optimizer over legal HybridStrategySpec candidates."
     )
@@ -84,6 +99,7 @@ def _print_final_results(rows: list[dict[str, object]]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run beam optimizer and optionally persist JSON summaries/results."""
     args = _parse_args(argv)
 
     initial_specs = enumerate_legal_specs(

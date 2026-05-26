@@ -1,3 +1,17 @@
+"""Manifest and fixture loading utilities for canonical dense strategies.
+
+Architectural role:
+- load persisted fixtures generated from HybridStrategySpec
+- provide dictionary payloads expected by dense evaluators
+
+Invariants:
+- fixture arrays must match canonical dense table shapes
+- returned payload exposes both ``comm`` and ``comm_table`` keys
+
+Failure behavior:
+- raises ValueError for malformed manifests or missing fixture keys
+"""
+
 from __future__ import annotations
 
 import json
@@ -8,10 +22,16 @@ import numpy as np
 
 
 def _default_manifest_path() -> Path:
+    """Return the canonical persistent fixture manifest path."""
     return Path(__file__).resolve().parents[2] / "fixtures" / "persistent" / "a_strategies" / "manifest.json"
 
 
 def load_manifest(manifest_path: str | Path | None = None) -> List[Dict[str, Any]]:
+    """Load fixture manifest records used by canonical A-side fixtures.
+
+    Raises:
+        ValueError: if the JSON top-level object is not a list.
+    """
     path = Path(manifest_path) if manifest_path is not None else _default_manifest_path()
     with path.open("r", encoding="utf-8") as f:
         manifest = json.load(f)
@@ -22,6 +42,14 @@ def load_manifest(manifest_path: str | Path | None = None) -> List[Dict[str, Any
 
 
 def load_strategy(path: str | Path, manifest_path: str | Path | None = None) -> Dict[str, Any]:
+    """Load one canonical dense fixture into evaluator-ready dictionary form.
+
+    Architectural role:
+    - bridges persisted ``.npz`` fixtures into dense evaluator input contract
+
+    Raises:
+        ValueError: if required ``f_table_<d>`` arrays are missing.
+    """
     strategy_path = Path(path)
     strategy_name = None
 

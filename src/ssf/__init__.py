@@ -1,3 +1,14 @@
+"""Public SSF API exports for canonical spec/evaluator/search flows.
+
+Architectural role:
+- re-export stable entry points used by scripts and tests
+- keep optimizer/evaluator callers on canonical modules
+
+Invariants:
+- names exported here map to the canonical implementations
+- no business logic or compatibility shims live in this module
+"""
+
 from .bob_exhaustive import evaluate_strategy_exhaustive
 from .strategy_io import load_manifest, load_strategy
 from .hybrid_strategy_spec import (

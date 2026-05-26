@@ -1,3 +1,17 @@
+"""CLI wrapper for canonical exhaustive strategy optimizer over legal specs.
+
+Architectural role:
+- command-line front end for strategy_optimizer.optimize_over_parameter_grid
+- keeps optimizer logic in src/ssf while exposing reproducible runs
+
+Invariants:
+- candidate generation uses canonical enumerate_legal_specs indirectly
+- scoring flows through strategy_evaluation and optional cache policy
+
+Failure behavior:
+- argument or optimizer validation errors propagate as non-zero process exit
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -23,6 +37,7 @@ DEFAULT_FAMILIES = ["majority", "pyramid", "horizontal", "vertical"]
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI arguments for exhaustive optimizer execution."""
     parser = argparse.ArgumentParser(
         description="Run exhaustive strategy optimizer over legal HybridStrategySpec candidates."
     )
@@ -67,6 +82,7 @@ def _print_ranked_table(p_rule: float, rows: list[dict[str, object]]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run exhaustive optimizer and optionally persist JSON report."""
     args = _parse_args(argv)
 
     cache: EvaluationCache | None = None

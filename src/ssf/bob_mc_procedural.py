@@ -1,15 +1,15 @@
-"""
-Procedural Monte Carlo Bob evaluator.
+"""Procedural Monte Carlo Bob evaluator for canonical procedural strategies.
 
-Unlike bob_mc.py, this module does not require dense f_table/comm_table arrays.
-Instead, the A-side strategy is called on demand via the ProceduralAliceStrategy
-protocol, making it suitable for large n2 where dense tables would be infeasible.
+Architectural role:
+- procedural backend used by strategy_evaluation dispatch
+- mirrors dense MC decision/search flow without dense fixture tables
 
-Core design mirrors evaluate_strategy_mc in bob_mc.py:
-- Structured search over box subsets and Bob measurement masks.
-- Monte Carlo over hidden world (field, out_a).
-- Two-phase: training (candidate selection) then evaluation (independent scoring).
-- Common random numbers across candidates for variance reduction.
+Invariants:
+- strategy must satisfy canonical measure_a/comm protocol
+- sampling and subset-policy semantics match dense MC backend
+
+Failure behavior:
+- raises ValueError for invalid parameters or non-binary procedural outputs
 """
 
 from __future__ import annotations
@@ -27,6 +27,8 @@ import numpy as np
 
 @dataclass(frozen=True)
 class ProceduralBobResult:
+    """Normalized procedural-MC result payload consumed by dispatcher/cache."""
+
     success: float
     ci_low: float
     ci_high: float
@@ -47,7 +49,7 @@ class ProceduralBobResult:
 
 @runtime_checkable
 class ProceduralAliceStrategy(Protocol):
-    """Protocol for A-side strategies that provide on-demand evaluation."""
+    """Canonical procedural interface used by procedural MC evaluator."""
 
     n2: int
     k_box: int
@@ -254,26 +256,7 @@ def evaluate_strategy_mc_procedural(
     seed: int = 0,
     record_time: bool = False,
 ) -> ProceduralBobResult:
-    """Evaluate a procedural A-side strategy using structured Monte Carlo.
-
-    Mirrors the logic of bob_mc.evaluate_strategy_mc, but calls the strategy
-    protocol on demand instead of using pre-built dense tables. Suitable for
-    large n2 where dense tables would be impractical.
-
-    Args:
-        strategy:         ProceduralAliceStrategy providing measure_a and comm.
-        p_rule:           PR-box rule compliance probability in [0, 1].
-        box_limit:        Maximum number of boxes Bob may use. Defaults to k_box.
-        subset_policy:    "up_to" or "exact".
-        n_train_samples:  Samples per gun for training phase.
-        n_eval_samples:   Samples per gun for evaluation phase.
-        confidence:       CI confidence level in (0, 1).
-        seed:             RNG seed for reproducibility.
-        record_time:      If True, measure wall-clock elapsed time.
-
-    Returns:
-        ProceduralBobResult with success rate and confidence interval.
-    """
+    """Estimate Bob success by Monte Carlo against canonical procedural strategy API."""
     start_time = time.perf_counter() if record_time else None
 
     n2, k_box, eff_limit = _validate_inputs(

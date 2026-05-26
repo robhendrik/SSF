@@ -1,4 +1,13 @@
-"""Legal strategy enumeration and exhaustive ranking over canonical HybridStrategySpec candidates."""
+"""Canonical legal-spec enumeration and exhaustive ranking utilities.
+
+Architectural role:
+- generates valid HybridStrategySpec candidates for optimizer front-ends
+- provides exhaustive ranking through strategy_evaluation.evaluate_candidate
+
+Invariants:
+- all emitted specs pass validate_spec and required_boxes <= k_box
+- no strategy-name shortcuts; ranking uses evaluator outputs only
+"""
 
 from __future__ import annotations
 
@@ -15,6 +24,8 @@ from .strategy_evaluation import EvaluationRequest, StrategyCandidate, evaluate_
 
 @dataclass(frozen=True)
 class SearchResult:
+    """One ranked search row linking canonical spec identity to success score."""
+
     spec: HybridStrategySpec
     candidate_name: str
     success: float
@@ -33,6 +44,11 @@ def enumerate_legal_specs(
     k_box_values: list[int],
     families: list[str],
 ) -> list[HybridStrategySpec]:
+    """Enumerate canonical legal specs over provided grid dimensions.
+
+    Failure behavior:
+    - invalid intermediate specs are skipped via validate_spec exceptions
+    """
     dedup: dict[str, HybridStrategySpec] = {}
 
     for n2 in n2_values:
@@ -121,6 +137,11 @@ def exhaustive_search(
     evaluation_mode: str = "analytical",
     top_k: int | None = None,
 ) -> list[SearchResult]:
+    """Evaluate and rank candidate specs through canonical evaluator dispatch.
+
+    Raises:
+        ValueError: if ``top_k`` is negative when provided.
+    """
     scored: list[SearchResult] = []
 
     for spec in specs:

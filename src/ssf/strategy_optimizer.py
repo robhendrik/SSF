@@ -1,4 +1,16 @@
-"""Backend-agnostic exhaustive and beam search optimizers over canonical strategy candidates."""
+"""Canonical backend-agnostic exhaustive and beam strategy optimizers.
+
+Architectural role:
+- orchestrates search over validated HybridStrategySpec candidates
+- delegates scoring to strategy_evaluation dispatcher and optional cache
+
+Invariants:
+- ranking is driven only by evaluator success values
+- optimizer logic is independent of backend internals
+
+Failure behavior:
+- raises ValueError for invalid optimizer configuration values
+"""
 
 from __future__ import annotations
 
@@ -14,6 +26,8 @@ from .strategy_search import enumerate_legal_specs
 
 @dataclass(frozen=True)
 class OptimizationResult:
+    """Ranked exhaustive-optimizer output row for one canonical candidate."""
+
     spec: HybridStrategySpec
     candidate_name: str
     success: float
@@ -25,6 +39,8 @@ class OptimizationResult:
 
 @dataclass(frozen=True)
 class BeamSearchConfig:
+    """Configuration for canonical beam-search traversal and evaluation."""
+
     p_rule: float
     evaluation_mode: str
     beam_width: int = 10
@@ -37,6 +53,8 @@ class BeamSearchConfig:
 
 @dataclass(frozen=True)
 class BeamSearchResult:
+    """Ranked beam-search output row with generation lineage metadata."""
+
     spec: HybridStrategySpec
     candidate_name: str
     success: float
@@ -62,6 +80,7 @@ def mutate_spec(
     families: list[str],
     rng: random.Random,
 ) -> list[HybridStrategySpec]:
+    """Generate legal local neighbor specs for beam expansion from one parent spec."""
     validated = validate_spec(spec)
     current_name = candidate_name(validated)
 
@@ -196,6 +215,7 @@ def beam_search_optimizer_with_summaries(
     config: BeamSearchConfig,
     cache: EvaluationCache | None = None,
 ) -> tuple[list[BeamSearchResult], list[dict[str, Any]]]:
+    """Run canonical beam search and return top-k rows plus generation summaries."""
     if config.beam_width <= 0:
         raise ValueError("beam_width must be positive.")
     if config.generations < 0:
@@ -309,6 +329,7 @@ def beam_search_optimizer(
     config: BeamSearchConfig,
     cache: EvaluationCache | None = None,
 ) -> list[BeamSearchResult]:
+    """Run beam search and return ranked rows without generation summary payload."""
     results, _ = beam_search_optimizer_with_summaries(
         initial_specs=initial_specs,
         n2_values=n2_values,
@@ -329,6 +350,7 @@ def exhaustive_strategy_optimizer(
     cache_policy: CachePolicy | None = None,
     cache: EvaluationCache | None = None,
 ) -> list[OptimizationResult]:
+    """Rank provided specs exhaustively through canonical evaluator dispatch."""
     if top_k < 0:
         raise ValueError("top_k must be non-negative.")
 
@@ -384,6 +406,7 @@ def optimize_over_parameter_grid(
     cache_policy: CachePolicy | None = None,
     cache: EvaluationCache | None = None,
 ) -> dict[float, list[OptimizationResult]]:
+    """Run exhaustive optimizer independently for each requested p_rule value."""
     specs = enumerate_legal_specs(
         n2_values=[int(v) for v in n2_values],
         k_box_values=[int(v) for v in k_box_values],

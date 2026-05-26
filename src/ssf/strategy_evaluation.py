@@ -1,4 +1,18 @@
-"""Backend-agnostic strategy evaluator dispatcher and normalized request/result contracts."""
+"""Canonical backend-agnostic evaluation dispatcher for strategy candidates.
+
+Architectural role:
+- central entry point between spec/search/optimizer and evaluator backends
+- normalizes analytical, dense exhaustive, dense MC, and procedural MC results
+- coordinates with strategy_cache without leaking cache logic into evaluators
+
+Invariants:
+- candidate specs are validated before dispatch
+- optimizers consume only EvaluationResult.success and metadata
+- backend selection is mode-driven, not candidate-name-driven
+
+Failure behavior:
+- raises ValueError for invalid p_rule or unsupported mode
+"""
 
 from __future__ import annotations
 
@@ -19,6 +33,8 @@ EvaluationMode = Literal["analytical", "dense_exhaustive", "dense_mc", "procedur
 
 @dataclass(frozen=True)
 class StrategyCandidate:
+    """Canonical optimization candidate carrying a validated HybridStrategySpec."""
+
     spec: HybridStrategySpec
     source: str = "unknown"
     metadata: dict[str, Any] = field(default_factory=dict)
@@ -26,6 +42,8 @@ class StrategyCandidate:
 
 @dataclass(frozen=True)
 class EvaluationRequest:
+    """Immutable request for evaluator dispatch and optional cache lookup."""
+
     candidate: StrategyCandidate
     p_rule: float
     mode: EvaluationMode
@@ -39,6 +57,8 @@ class EvaluationRequest:
 
 @dataclass(frozen=True)
 class EvaluationResult:
+    """Normalized evaluator output returned to search/optimizer/caching layers."""
+
     success: float
     mode: EvaluationMode
     exact: bool
@@ -51,6 +71,11 @@ class EvaluationResult:
 
 
 def evaluation_cache_key(request: EvaluationRequest) -> tuple:
+    """Build canonical cache key components for one evaluation request.
+
+    Invariants:
+    - includes stable spec identity and evaluator settings that affect outcomes
+    """
     spec = validate_spec(request.candidate.spec)
     return (
         stable_key(spec),
@@ -66,6 +91,7 @@ def evaluation_cache_key(request: EvaluationRequest) -> tuple:
 
 
 def _evaluate_candidate_uncached(request: EvaluationRequest) -> EvaluationResult:
+    """Execute backend dispatch without reading/writing cache records."""
     spec = validate_spec(request.candidate.spec)
     p_rule = float(request.p_rule)
     if not (0.0 <= p_rule <= 1.0):
@@ -151,6 +177,14 @@ def evaluate_candidate(
     cache_policy: "CachePolicy | None" = None,
     cache: "EvaluationCache | None" = None,
 ) -> EvaluationResult:
+    """Evaluate one candidate via canonical dispatcher with optional cache policy.
+
+    Architectural role:
+    - single optimizer-facing API for all backends and cache behavior
+
+    Failure behavior:
+    - propagates validation/backend errors from request validation and evaluators
+    """
     # Lazy import avoids circular dependency: strategy_cache imports strategy_evaluation.
     from .strategy_cache import CachePolicy, EvaluationCache, result_from_record
 

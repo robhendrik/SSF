@@ -1,4 +1,16 @@
-"""Canonical strategy schema, validation rules, and naming for SSF A-side specs."""
+"""Canonical HybridStrategySpec schema, validation, and naming semantics.
+
+Architectural role:
+- single source of truth for strategy identity and legality
+- feeds fixture generation, evaluators, search, optimizer, and cache keys
+
+Invariants:
+- canonical names come only from candidate_name()
+- required_boxes() reflects validated geometry constraints
+
+Failure behavior:
+- validation helpers raise ValueError on illegal parameter combinations
+"""
 
 from __future__ import annotations
 
@@ -12,6 +24,13 @@ Order = Literal["maj_pyr", "pyr_maj"]
 
 @dataclass(frozen=True)
 class HybridStrategySpec:
+    """Canonical A-side strategy descriptor used across the SSF architecture.
+
+    Field ownership:
+    - family/n2/k_box identify the strategy family and resource budget
+    - split/depth_s/order/tie_bandwidth are family-specific structural knobs
+    """
+
     family: Family
     n2: int
     k_box: int
@@ -23,6 +42,7 @@ class HybridStrategySpec:
 
 
 def is_power_of_two(value: int) -> bool:
+    """Return True when value is a positive power of two."""
     return value > 0 and (value & (value - 1)) == 0
 
 
@@ -62,6 +82,11 @@ def _required_boxes_validated(spec: HybridStrategySpec) -> int:
 
 
 def validate_spec(spec: HybridStrategySpec) -> HybridStrategySpec:
+    """Validate canonical strategy invariants and return the same spec.
+
+    Raises:
+        ValueError: when family-specific constraints or box requirements fail.
+    """
     if spec.family not in ("majority", "pyramid", "horizontal", "vertical"):
         raise ValueError(f"Invalid family: {spec.family}")
 
@@ -172,11 +197,13 @@ def even_tie_values(majority_len: int) -> list[int]:
 
 
 def required_boxes(spec: HybridStrategySpec) -> int:
+    """Return the required number of PR boxes for a validated strategy."""
     validated = validate_spec(spec)
     return _required_boxes_validated(validated)
 
 
 def candidate_name(spec: HybridStrategySpec) -> str:
+    """Return canonical fixture/search/cache name derived from validated spec."""
     validated = validate_spec(spec)
     if validated.family == "majority":
         assert validated.tie_bandwidth is not None
@@ -204,6 +231,7 @@ def candidate_name(spec: HybridStrategySpec) -> str:
 
 
 def stable_key(spec: HybridStrategySpec) -> tuple:
+    """Return stable tuple identity used by cache and deduplication flows."""
     validated = validate_spec(spec)
     return (
         validated.family,
@@ -218,6 +246,7 @@ def stable_key(spec: HybridStrategySpec) -> tuple:
 
 
 def with_required_boxes(spec: HybridStrategySpec) -> dict:
+    """Return validated spec payload augmented with required/unused box counts."""
     validated = validate_spec(spec)
     req = _required_boxes_validated(validated)
     payload = asdict(validated)

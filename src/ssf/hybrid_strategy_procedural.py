@@ -1,4 +1,16 @@
-"""Procedural strategy execution equivalent to canonical dense strategy semantics."""
+"""Procedural A-side strategy execution equivalent to canonical dense semantics.
+
+Architectural role:
+- procedural backend for evaluate_strategy_mc_procedural
+- mirrors fixture semantics from hybrid_strategy_fixtures without dense tables
+
+Invariants:
+- measure_a/comm outputs are binary and spec-consistent
+- behavior matches validated HybridStrategySpec geometry
+
+Failure behavior:
+- raises ValueError for invalid indices, fields, or unsupported families
+"""
 
 from __future__ import annotations
 
@@ -77,6 +89,8 @@ def _run_pyramid_layers(values: list[int], out_a: int, max_layers: int) -> list[
 
 @dataclass(frozen=True)
 class HybridProceduralStrategy:
+    """Procedural strategy object exposing canonical measure_a/comm contract."""
+
     spec: HybridStrategySpec
     n2: int
     k_box: int
@@ -104,6 +118,7 @@ class HybridProceduralStrategy:
         return [_bit(field, i) for i in range(self.n2)]
 
     def measure_a(self, box_idx: int, field: int, out_a_prefix: int) -> int:
+        """Return Alice input bit for one box under canonical procedural semantics."""
         self._validate_box_idx(box_idx)
         self._validate_field(field)
         self._validate_prefix(box_idx, out_a_prefix)
@@ -154,6 +169,7 @@ class HybridProceduralStrategy:
         raise ValueError(f"Unknown family: {spec.family}")
 
     def comm(self, field: int, out_a: int) -> int:
+        """Return Alice communication bit under canonical procedural semantics."""
         self._validate_field(field)
         self._validate_out_a(out_a)
 
@@ -219,6 +235,7 @@ class HybridProceduralStrategy:
 
 
 def build_procedural_strategy(spec: HybridStrategySpec) -> HybridProceduralStrategy:
+    """Build validated procedural strategy used by procedural MC evaluator flow."""
     validated = validate_spec(spec)
     boxes_used = required_boxes(validated)
     return HybridProceduralStrategy(

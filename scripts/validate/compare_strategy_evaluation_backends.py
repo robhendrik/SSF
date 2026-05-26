@@ -1,3 +1,17 @@
+"""Validate agreement across canonical evaluator backends on tiny reference specs.
+
+Architectural role:
+- integration check for strategy_evaluation dispatcher backends
+- confirms analytical/dense/procedural paths stay aligned within configured tolerances
+
+Invariants:
+- spec identities are canonical HybridStrategySpec values
+- comparisons use evaluate_candidate mode dispatch only
+
+Failure behavior:
+- required comparison tolerance failures produce non-zero process exit
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -22,6 +36,8 @@ DEFAULT_P_RULES = [0.5, 0.8, 1.0]
 
 @dataclass(frozen=True)
 class ComparisonOutcome:
+    """One backend comparison result row with pass/fail semantics."""
+
     name: str
     lhs: str
     rhs: str
@@ -49,6 +65,7 @@ def _build_tiny_specs() -> list[HybridStrategySpec]:
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI options controlling backend comparison checks and tolerances."""
     parser = argparse.ArgumentParser(
         description="Compare strategy evaluation backends via unified evaluator dispatcher."
     )
@@ -249,6 +266,7 @@ def _print_table(rows: list[dict[str, Any]]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run backend consistency checks and return 1 when required checks fail."""
     args = _parse_args(argv)
 
     rows: list[dict[str, Any]] = []

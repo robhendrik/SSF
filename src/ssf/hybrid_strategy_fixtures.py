@@ -1,4 +1,16 @@
-﻿"""Dense fixture construction and serialization for canonical HybridStrategySpec strategies."""
+﻿"""Canonical dense fixture construction and serialization from HybridStrategySpec.
+
+Architectural role:
+- materializes validated canonical specs into dense tables for dense evaluators
+- preserves fixture contract used by scripts/generate and evaluation backends
+
+Invariants:
+- f_table_d shapes follow (2**n2, 2**d)
+- unused boxes are zeroed and must not influence comm_table
+
+Failure behavior:
+- raises ValueError for invalid specs or unsupported families
+"""
 
 from __future__ import annotations
 
@@ -32,6 +44,8 @@ def _allocate_tables(n2: int, k_box: int):
 
 @dataclass(frozen=True)
 class DenseStrategyFixture:
+    """In-memory canonical dense fixture consumed by dense evaluators."""
+
     spec: HybridStrategySpec
     n2: int
     k_box: int
@@ -40,6 +54,7 @@ class DenseStrategyFixture:
     boxes_used: int
 
     def as_strategy_dict(self) -> dict:
+        """Return evaluator-compatible dictionary preserving canonical table keys."""
         return {
             "n2": self.n2,
             "k_box": self.k_box,
@@ -50,6 +65,7 @@ class DenseStrategyFixture:
 
 
 def build_strategy_fixture(spec: HybridStrategySpec) -> DenseStrategyFixture:
+    """Build canonical dense fixture tables for one validated strategy spec."""
     spec = validate_spec(spec)
     n2 = spec.n2
     k_box = spec.k_box
@@ -83,6 +99,7 @@ def build_strategy_fixture(spec: HybridStrategySpec) -> DenseStrategyFixture:
 
 
 def write_strategy_fixture(spec: HybridStrategySpec, output_dir: Path) -> Path:
+    """Persist canonical dense fixture to compressed ``.npz`` file and return path."""
     fixture = build_strategy_fixture(spec)
     output_dir.mkdir(parents=True, exist_ok=True)
     fname = candidate_name(spec) + ".npz"

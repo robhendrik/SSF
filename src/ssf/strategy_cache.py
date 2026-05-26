@@ -1,4 +1,16 @@
-"""Evaluation cache records, policy controls, replacement logic, and persistence APIs."""
+"""Canonical evaluation cache policies, record schema, and persistence behavior.
+
+Architectural role:
+- stores evaluator outputs keyed by spec+mode+settings for optimizer/search reuse
+- mediates replacement policy across exact and Monte Carlo backends
+
+Invariants:
+- cache identity includes stable spec key and evaluator configuration
+- record trust hierarchy is mode-aware and deterministic
+
+Failure behavior:
+- raises ValueError on malformed cache payloads and schema violations
+"""
 
 from __future__ import annotations
 
@@ -16,6 +28,8 @@ from .strategy_evaluation import EvaluationRequest, EvaluationResult
 
 @dataclass(frozen=True)
 class CachePolicy:
+    """Cache read/write and trust-filter policy consumed by evaluate_candidate."""
+
     enabled: bool = False
     read: bool = True
     write: bool = True
@@ -64,6 +78,8 @@ REQUIRED_RECORD_FIELDS = {
 
 @dataclass(frozen=True)
 class EvaluationCacheRecord:
+    """Persistent canonical cache record for one evaluated candidate request."""
+
     key: str
     candidate_name: str
     spec: dict[str, Any]
@@ -171,6 +187,7 @@ def _request_cache_key_tuple(request: EvaluationRequest, policy: CachePolicy) ->
 
 
 def cache_key_to_string(key: tuple) -> str:
+    """Serialize canonical key tuple to stable JSON string for on-disk indexing."""
     return json.dumps(_to_jsonable(key), sort_keys=True, separators=(",", ":"))
 
 
@@ -179,6 +196,7 @@ def record_from_result(
     result: EvaluationResult,
     policy: CachePolicy,
 ) -> EvaluationCacheRecord:
+    """Convert evaluator output into canonical cache record representation."""
     validated: HybridStrategySpec = validate_spec(request.candidate.spec)
     mode = str(result.mode)
     analytical = mode == "analytical"
@@ -215,6 +233,7 @@ def record_from_result(
 
 
 def result_from_record(record: EvaluationCacheRecord) -> EvaluationResult:
+    """Map persisted cache record back to normalized evaluation result."""
     method = str(record.metadata.get("method", "cache"))
     notes = str(record.metadata.get("notes", "Loaded from evaluation cache."))
     return EvaluationResult(
@@ -245,6 +264,7 @@ def should_replace_cached(
     new: EvaluationCacheRecord,
     policy: CachePolicy,
 ) -> bool:
+    """Return whether a new record should replace an existing record for same key."""
     if new.analytical and not policy.persist_analytical:
         return False
 
@@ -282,6 +302,12 @@ def should_replace_cached(
 
 
 class EvaluationCache:
+    """On-disk evaluation cache for canonical dispatcher requests.
+
+    Relationship to canonical flow:
+    - used by strategy_evaluation.evaluate_candidate when cache policy is enabled
+    """
+
     def __init__(self, cache_dir: Path):
         self.cache_dir = Path(cache_dir)
         self.jsonl_path = self.cache_dir / "b_performance.jsonl"
@@ -289,6 +315,7 @@ class EvaluationCache:
         self._latest: dict[str, EvaluationCacheRecord] = {}
 
     def load(self) -> None:
+        """Load latest records from cache files and refresh latest index snapshot."""
         self._latest = {}
 
         if self.latest_path.exists():
@@ -321,6 +348,7 @@ class EvaluationCache:
         self._write_latest_json()
 
     def lookup(self, request: EvaluationRequest, policy: CachePolicy) -> EvaluationCacheRecord | None:
+        """Return cached record matching request and policy filters, or None."""
         if not policy.enabled or not policy.read or not policy.prefer_cached:
             return None
 
@@ -344,6 +372,7 @@ class EvaluationCache:
         return record
 
     def append(self, record: EvaluationCacheRecord) -> None:
+        """Append a record to JSONL history and update latest snapshot state."""
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         with self.jsonl_path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(asdict(record), sort_keys=True, ensure_ascii=True) + "\n")
@@ -356,6 +385,7 @@ class EvaluationCache:
         result: EvaluationResult,
         policy: CachePolicy,
     ) -> EvaluationCacheRecord | None:
+        """Insert or replace cached record for request/result under replacement rules."""
         if not policy.enabled or not policy.write:
             return None
 
@@ -371,15 +401,18 @@ class EvaluationCache:
         return existing
 
     def all_records(self) -> list[EvaluationCacheRecord]:
+        """Return current latest records loaded in memory."""
         return list(self._latest.values())
 
     def invalidate_by_mode(self, mode: str) -> None:
+        """Remove all cached latest records for one evaluator mode."""
         self._latest = {
             key: record for key, record in self._latest.items() if record.mode != mode
         }
         self._write_latest_json()
 
     def invalidate_by_evaluator_version(self, version: str) -> None:
+        """Remove all cached latest records for one evaluator version tag."""
         self._latest = {
             key: record
             for key, record in self._latest.items()
@@ -388,6 +421,7 @@ class EvaluationCache:
         self._write_latest_json()
 
     def clear(self) -> None:
+        """Clear in-memory state and remove on-disk cache files."""
         self._latest = {}
         if self.jsonl_path.exists():
             self.jsonl_path.unlink()

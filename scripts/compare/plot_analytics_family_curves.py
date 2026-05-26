@@ -382,6 +382,7 @@ def generate_figure(
 # ---------------------------------------------------------------------------
 
 def _parse_args() -> argparse.Namespace:
+    """Parse CLI options for canonical analytical curve plotting workflow."""
     parser = argparse.ArgumentParser(
         description="Plot closed-form analytical win-rate curves for hybrid strategy families.",
     )
@@ -451,6 +452,7 @@ def _parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """Generate analytical family-curve figures for requested n2 values."""
     args = _parse_args()
     output_dir: Path = args.output_dir
 

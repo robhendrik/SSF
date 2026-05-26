@@ -1,3 +1,17 @@
+"""Dense exhaustive Bob-side evaluator for canonical strategy fixtures.
+
+Architectural role:
+- exact dense backend used by strategy_evaluation dispatch
+- baseline for validating MC and analytical backends
+
+Invariants:
+- scoring depends only on dense tables and p_rule
+- no candidate-name shortcuts or embedded expected score tables
+
+Failure behavior:
+- raises ValueError for malformed strategy payloads or invalid limits/policies
+"""
+
 from __future__ import annotations
 
 from math import comb

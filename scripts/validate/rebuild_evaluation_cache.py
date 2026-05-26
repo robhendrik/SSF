@@ -1,3 +1,17 @@
+"""Rebuild canonical evaluation cache by sweeping legal specs through dispatcher.
+
+Architectural role:
+- operational cache warmer for evaluator/search/optimizer workflows
+- executes canonical evaluate_candidate path with explicit cache policy
+
+Invariants:
+- candidate set is produced by enumerate_legal_specs
+- records are written under strategy_cache key/replacement semantics
+
+Failure behavior:
+- invalid arguments or evaluator/cache errors propagate as non-zero exit
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -26,6 +40,7 @@ DEFAULT_FAMILIES = ["majority", "pyramid", "horizontal", "vertical"]
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI options for cache rebuild parameter sweep and reporting."""
     parser = argparse.ArgumentParser(
         description="Sweep legal strategy specs and refresh evaluation cache using unified evaluator dispatcher."
     )
@@ -67,6 +82,7 @@ def _jsonl_line_count(path: Path) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run cache rebuild sweep and emit progress and optional JSON summary."""
     args = _parse_args(argv)
 
     if args.mode == "analytical" and not args.persist_analytical:

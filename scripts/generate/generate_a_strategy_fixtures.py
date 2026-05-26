@@ -1,3 +1,17 @@
+"""Generate canonical dense A-side fixtures and manifest from HybridStrategySpec.
+
+Architectural role:
+- authoritative fixture producer for fixtures/persistent/a_strategies
+- bridges canonical spec validation to dense fixture serialization and analytics
+
+Invariants:
+- naming derives from candidate_name(spec)
+- only validated legal specs are emitted
+
+Failure behavior:
+- invalid specs are recorded in skipped output; hard failures raise ValueError
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -251,6 +265,7 @@ def generate_a_strategy_fixtures(
     max_n2_for_dense_fixtures: int = 8,
     max_comm_cells: int = 16_000_000,
 ) -> list[dict]:
+    """Generate canonical fixture files and return manifest records for emitted specs."""
     family_selection = _normalize_families(families)
     p_rules = tuple(float(v) for v in p_rule_values)
 
@@ -332,6 +347,7 @@ def generate_a_strategy_fixtures(
 
 
 def _parse_args() -> argparse.Namespace:
+    """Parse CLI options for canonical fixture generation workflow."""
     parser = argparse.ArgumentParser(description="Generate canonical A-strategy fixtures from HybridStrategySpec.")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--overwrite", action="store_true")
@@ -352,6 +368,7 @@ def _parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """CLI entry point for canonical fixture generation."""
     args = _parse_args()
     manifest = generate_a_strategy_fixtures(
         output_dir=args.output_dir,

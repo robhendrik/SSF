@@ -1,3 +1,17 @@
+"""Dense Monte Carlo Bob-side evaluator for canonical dense strategy fixtures.
+
+Architectural role:
+- probabilistic dense backend used by strategy_evaluation dispatch
+- approximates exhaustive backend when exact evaluation is expensive
+
+Invariants:
+- same visible-state decision structure as exhaustive backend
+- two-phase train/eval sampling with reproducible RNG seed
+
+Failure behavior:
+- raises ValueError for malformed fixtures or invalid sampling parameters
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -8,6 +22,8 @@ import numpy as np
 
 @dataclass(frozen=True)
 class MonteCarloBobResult:
+    """Normalized dense-MC result payload consumed by evaluation dispatcher/cache."""
+
     success: float
     ci_low: float
     ci_high: float
@@ -233,6 +249,7 @@ def evaluate_strategy_mc(
     confidence: float = 0.95,
     seed: int = 0,
 ) -> MonteCarloBobResult:
+    """Estimate Bob success via canonical dense Monte Carlo train/eval procedure."""
     n2, k_box, f_tables, comm, eff_limit = _validate_and_pack(
         strategy,
         p_rule,

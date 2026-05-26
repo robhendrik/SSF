@@ -1,21 +1,18 @@
-"""
-Closed-form analytical scoring for HybridStrategySpec.
+"""Closed-form analytical scoring for canonical HybridStrategySpec candidates.
 
-All formulas are derived from first principles and return exact probabilities
-without Monte Carlo sampling, fixture construction, or evaluator calls.
+Architectural role:
+- analytical backend used by strategy_evaluation dispatch and optimizer/search
+- provides deterministic baseline without fixture or Monte Carlo execution
 
-Vertical assumption note
-------------------------
-The vertical closed-form formulas assume that majority-block correctness and
-pyramid routing errors combine independently through XOR double-error
-cancellation.  Specifically:
-  - For vertical maj_pyr: each majority block is assumed to produce an
-    independent correct/incorrect bit; the pyramid routes one block's output to
-    the final output, and an error in both the majority and pyramid layers
-    cancels via XOR, giving success = Pm*Pp + (1-Pm)*(1-Pp).
-  - For vertical pyr_maj: the pyramid selects one apex input; the apex majority
-    then decides; the same XOR cancellation assumption applies.
-These formulas are marked exact=True for now pending empirical validation.
+Invariants:
+- inputs are validated canonical specs
+- returned success values are probabilities in [0, 1]
+
+Failure behavior:
+- raises ValueError for invalid p_rule or unsupported families
+
+Note:
+- vertical formulas rely on the documented XOR double-error cancellation model
 """
 
 from __future__ import annotations
@@ -32,6 +29,8 @@ from .hybrid_strategy_spec import HybridStrategySpec, validate_spec
 
 @dataclass(frozen=True)
 class AnalyticalResult:
+    """Normalized analytical evaluator output consumed by dispatcher/cache layers."""
+
     success: float
     method: str
     exact: bool

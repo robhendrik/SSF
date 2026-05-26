@@ -1,3 +1,17 @@
+"""Strict integration validation for canonical evaluation cache behavior.
+
+Architectural role:
+- verifies strategy_cache policy, replacement, persistence, and invalidation semantics
+- exercises evaluate_candidate cache integration in realistic dispatcher flows
+
+Invariants:
+- cache identity is request+policy-version sensitive
+- trust hierarchy and lookup filters gate cache reuse deterministically
+
+Failure behavior:
+- assertion failures or malformed cache payloads produce non-zero process exit
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -35,6 +49,7 @@ from ssf.strategy_evaluation import (
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI options for cache validation workspace and reporting."""
     parser = argparse.ArgumentParser(description="Strict validation for strategy evaluation cache behavior.")
     parser.add_argument(
         "--cache-dir",
@@ -96,6 +111,7 @@ def _make_request(
     confidence: float = 0.95,
     seed: int = 123,
 ) -> EvaluationRequest:
+    """Build canonical evaluation request used by cache validation checks."""
     return EvaluationRequest(
         candidate=StrategyCandidate(spec=spec, source="validate_strategy_cache_behavior"),
         p_rule=float(p_rule),
@@ -542,6 +558,7 @@ def _check_corruption_invalid_input_behavior(cache_dir: Path) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Run cache-behavior validation suite and return 0 on full pass."""
     args = _parse_args(argv)
     cache_dir = Path(args.cache_dir)
 
