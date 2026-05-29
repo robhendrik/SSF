@@ -30,7 +30,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then
+          if [ -f requirements-docs.txt ]; then
+            python -m pip install -r requirements-docs.txt
+          elif [ -f requirements.txt ]; then
             python -m pip install -r requirements.txt
           else
             python -m pip install mkdocs
