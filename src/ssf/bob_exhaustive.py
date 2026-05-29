@@ -108,8 +108,8 @@ def _validate_inputs(
 
     if n2 <= 0:
         raise ValueError("n2 must be positive.")
-    if k_box <= 0:
-        raise ValueError("k_box must be positive.")
+    if k_box < 0:
+        raise ValueError("k_box must be non-negative.")
 
     p = float(p_rule)
     if not 0.0 <= p <= 1.0:
@@ -315,6 +315,10 @@ def evaluate_strategy_exhaustive(
 
     No strategy names, manifest expected scores, or reference-strategy shortcuts
     are used here. The result depends only on the lookup tables and p_rule.
+
+    ``k_box=0`` is supported as the no-PR-box baseline. In that case, ``f_tables``
+    may be empty, ``comm`` must have shape ``(2**n2, 1)``, and only subset mask 0
+    is valid.
     """
 
     n2, k_box, f_tables, comm, eff_limit = _validate_inputs(

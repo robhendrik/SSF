@@ -58,6 +58,19 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         choices=["majority", "pyramid", "horizontal", "vertical"],
     )
     parser.add_argument("--top-k", type=int, default=10)
+    parser.add_argument(
+        "--box-limit",
+        type=int,
+        default=None,
+        help="Restrict Bob-visible box outputs (dense_exhaustive only).",
+    )
+    parser.add_argument(
+        "--subset-policy",
+        type=str,
+        default="up_to",
+        choices=["up_to", "exact"],
+        help="Subset restriction policy for box-limit (dense_exhaustive only).",
+    )
     parser.add_argument("--cache-enabled", action="store_true")
     parser.add_argument(
         "--cache-dir",
@@ -105,6 +118,8 @@ def main(argv: list[str] | None = None) -> int:
         k_box_values=[int(v) for v in args.k_box_values],
         families=[str(v) for v in args.families],
         evaluation_mode=str(args.mode),
+        box_limit=args.box_limit,
+        subset_policy=str(args.subset_policy),
         top_k=int(args.top_k),
         cache_policy=cache_policy,
         cache=cache,
@@ -146,6 +161,8 @@ def main(argv: list[str] | None = None) -> int:
                 "k_box_values": [int(v) for v in args.k_box_values],
                 "families": [str(v) for v in args.families],
                 "top_k": int(args.top_k),
+                "box_limit": args.box_limit,
+                "subset_policy": str(args.subset_policy),
                 "cache_enabled": bool(args.cache_enabled),
                 "cache_dir": str(Path(args.cache_dir)),
                 "persist_analytical": bool(args.persist_analytical),

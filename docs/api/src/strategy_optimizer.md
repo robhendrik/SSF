@@ -10,6 +10,8 @@ Backend-agnostic exhaustive and beam search optimizers over canonical strategy c
 
 Reusable exhaustive and beam optimizer implementations over canonical specs.
 
+For exhaustive optimization, optional `box_limit` and `subset_policy` settings are forwarded to evaluator dispatch for restricted Bob-capacity runs.
+
 ## Key dataclasses
 
 | Name | Purpose |

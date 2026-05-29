@@ -346,11 +346,17 @@ def exhaustive_strategy_optimizer(
     specs: list[HybridStrategySpec],
     p_rule: float,
     evaluation_mode: str,
+    box_limit: int | None = None,
+    subset_policy: str = "up_to",
     top_k: int = 10,
     cache_policy: CachePolicy | None = None,
     cache: EvaluationCache | None = None,
 ) -> list[OptimizationResult]:
-    """Rank provided specs exhaustively through canonical evaluator dispatch."""
+    """Rank provided specs exhaustively through canonical evaluator dispatch.
+
+    Notes:
+    - ``box_limit``/``subset_policy`` are forwarded to evaluator dispatch.
+    """
     if top_k < 0:
         raise ValueError("top_k must be non-negative.")
 
@@ -363,12 +369,16 @@ def exhaustive_strategy_optimizer(
             candidate=StrategyCandidate(spec=validated, source="strategy_optimizer"),
             p_rule=float(p_rule),
             mode=evaluation_mode,
+            box_limit=box_limit,
+            subset_policy=subset_policy,
         )
         result = evaluate_candidate(request, cache_policy=cache_policy, cache=cache)
 
         metadata: dict[str, object] = {
             "exact": bool(result.exact),
             "analytical": bool(result.mode == "analytical"),
+            "box_limit": box_limit,
+            "subset_policy": subset_policy,
         }
         if "cache_hit" in result.metadata:
             metadata["cache_hit"] = bool(result.metadata["cache_hit"])
@@ -403,6 +413,8 @@ def optimize_over_parameter_grid(
     families: list[str],
     evaluation_mode: str,
     top_k: int,
+    box_limit: int | None = None,
+    subset_policy: str = "up_to",
     cache_policy: CachePolicy | None = None,
     cache: EvaluationCache | None = None,
 ) -> dict[float, list[OptimizationResult]]:
@@ -420,6 +432,8 @@ def optimize_over_parameter_grid(
             specs=specs,
             p_rule=value,
             evaluation_mode=evaluation_mode,
+            box_limit=box_limit,
+            subset_policy=subset_policy,
             top_k=top_k,
             cache_policy=cache_policy,
             cache=cache,

@@ -10,6 +10,15 @@ Backend-agnostic strategy evaluator dispatcher and normalized request/result con
 
 Backend-agnostic evaluator dispatcher for analytical, exhaustive, and Monte Carlo modes.
 
+Restriction knobs note:
+- `box_limit` and `subset_policy` are supported for `dense_exhaustive` requests.
+- Non-default restrictions on other modes are rejected with a validation error.
+
+`k_box=0` note:
+- `k_box=0` represents the no-PR-box baseline.
+- Bob decisions use only gun index and Alice communication.
+- This protocol box-count setting is distinct from Bob decision-output limits (`box_limit`, `subset_policy`).
+
 ## Key dataclasses
 
 | Name | Purpose |

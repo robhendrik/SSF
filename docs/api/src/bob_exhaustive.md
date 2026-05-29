@@ -13,6 +13,7 @@ Implements the dense exhaustive backend used by `strategy_evaluation.evaluate_ca
 - Strategy payload must contain canonical dense tables (`n2`, `k_box`, `f_tables`, `comm`/`comm_table`).
 - Table shapes must satisfy the dense fixture contract.
 - `p_rule` must be in `[0, 1]`.
+- `k_box=0` is valid (no PR boxes): `f_tables` may be empty and `comm` shape must be `(2**n2, 1)`.
 
 ## Evaluation mode relation
 

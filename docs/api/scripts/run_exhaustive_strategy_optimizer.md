@@ -29,6 +29,20 @@ python scripts/optimize/run_exhaustive_strategy_optimizer.py --mode analytical
 | --quiet | flag | False | False |  |  |
 | --top-k | int | 10 | False |  |  |
 
+## Restricted Bob capacity knobs
+
+- `--box-limit` restricts Bob-side visible box outputs during optimization.
+- `--subset-policy up_to` means Bob may choose any subset of size `<= box_limit`.
+- `--subset-policy exact` means Bob must use a subset of exactly `box_limit` boxes.
+- These knobs are supported for `--mode dense_exhaustive`.
+- This measures restricted Bob capacity, not which boxes an unrestricted optimized Bob actively used.
+
+## Protocol box-count baseline
+
+- `--k-box-values 0` is supported as the no-PR-box protocol baseline.
+- For `k_box=0`, Alice sends only the communication bit and Bob uses gun/index plus communication.
+- This is a protocol resource setting and is distinct from Bob decision-output restrictions.
+
 ## See also
 
 - [strategy_cache](../src/strategy_cache.md)

@@ -180,3 +180,30 @@ def test_cache_key_distinguishes_evaluation_modes(tmp_path):
 
     keys = {record.key for record in cache.all_records()}
     assert len(keys) == 2
+
+
+def test_cache_key_distinguishes_unrestricted_and_restricted_dense_exhaustive(tmp_path):
+    policy = CachePolicy(enabled=True, cache_dir=tmp_path)
+    cache = EvaluationCache(tmp_path)
+
+    spec = HybridStrategySpec(family="majority", n2=2, k_box=1, tie_bandwidth=0)
+    req_unrestricted = EvaluationRequest(
+        candidate=StrategyCandidate(spec=spec, source="integration_test"),
+        p_rule=0.8,
+        mode="dense_exhaustive",
+        box_limit=None,
+        subset_policy="up_to",
+    )
+    req_restricted = EvaluationRequest(
+        candidate=StrategyCandidate(spec=spec, source="integration_test"),
+        p_rule=0.8,
+        mode="dense_exhaustive",
+        box_limit=0,
+        subset_policy="up_to",
+    )
+
+    evaluate_candidate(req_unrestricted, cache_policy=policy, cache=cache)
+    evaluate_candidate(req_restricted, cache_policy=policy, cache=cache)
+
+    keys = {record.key for record in cache.all_records()}
+    assert len(keys) == 2

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -248,3 +249,98 @@ def test_strategy_optimizer_no_shortcuts_source_text() -> None:
 
     for token in forbidden_tokens:
         assert token not in source
+
+
+def test_cli_defaults_preserved_with_new_args(tmp_path: Path) -> None:
+    output_json = tmp_path / "defaults.json"
+    result = _run_script(
+        [
+            "--mode",
+            "dense_exhaustive",
+            "--p-rules",
+            "0.8",
+            "--n2-values",
+            "4",
+            "--k-box-values",
+            "3",
+            "--families",
+            "majority",
+            "--top-k",
+            "1",
+            "--cache-enabled",
+            "--cache-dir",
+            str(tmp_path / "cache"),
+            "--json-output",
+            str(output_json),
+            "--quiet",
+        ]
+    )
+
+    assert result.returncode == 0
+    payload = json.loads(output_json.read_text(encoding="utf-8"))
+    params = payload["parameters"]
+    assert params["box_limit"] is None
+    assert params["subset_policy"] == "up_to"
+
+
+def test_cli_restricted_dense_exhaustive_records_parameters(tmp_path: Path) -> None:
+    output_json = tmp_path / "restricted.json"
+    result = _run_script(
+        [
+            "--mode",
+            "dense_exhaustive",
+            "--p-rules",
+            "0.8",
+            "--n2-values",
+            "4",
+            "--k-box-values",
+            "3",
+            "--families",
+            "majority",
+            "--top-k",
+            "1",
+            "--box-limit",
+            "0",
+            "--subset-policy",
+            "up_to",
+            "--cache-enabled",
+            "--cache-dir",
+            str(tmp_path / "cache"),
+            "--json-output",
+            str(output_json),
+            "--quiet",
+        ]
+    )
+
+    assert result.returncode == 0
+    payload = json.loads(output_json.read_text(encoding="utf-8"))
+    params = payload["parameters"]
+    assert params["box_limit"] == 0
+    assert params["subset_policy"] == "up_to"
+
+
+def test_cli_restricted_non_dense_mode_fails_loudly(tmp_path: Path) -> None:
+    result = _run_script(
+        [
+            "--mode",
+            "analytical",
+            "--p-rules",
+            "0.8",
+            "--n2-values",
+            "4",
+            "--k-box-values",
+            "3",
+            "--families",
+            "majority",
+            "--top-k",
+            "1",
+            "--box-limit",
+            "0",
+            "--subset-policy",
+            "up_to",
+            "--quiet",
+        ]
+    )
+
+    assert result.returncode != 0
+    assert "box_limit/subset_policy restrictions are supported only" in result.stderr

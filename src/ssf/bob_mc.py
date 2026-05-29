@@ -102,8 +102,8 @@ def _validate_and_pack(
 
     if n2 <= 0:
         raise ValueError("n2 must be positive.")
-    if k_box <= 0:
-        raise ValueError("k_box must be positive.")
+    if k_box < 0:
+        raise ValueError("k_box must be non-negative.")
 
     p = float(p_rule)
     if p < 0.0 or p > 1.0:

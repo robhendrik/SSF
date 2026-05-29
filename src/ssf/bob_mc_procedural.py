@@ -122,8 +122,8 @@ def _validate_inputs(
 
     if n2 <= 0:
         raise ValueError("n2 must be positive.")
-    if k_box <= 0:
-        raise ValueError("k_box must be positive.")
+    if k_box < 0:
+        raise ValueError("k_box must be non-negative.")
 
     if float(p_rule) < 0.0 or float(p_rule) > 1.0:
         raise ValueError("p_rule must be in [0, 1].")
@@ -256,7 +256,12 @@ def evaluate_strategy_mc_procedural(
     seed: int = 0,
     record_time: bool = False,
 ) -> ProceduralBobResult:
-    """Estimate Bob success by Monte Carlo against canonical procedural strategy API."""
+    """Estimate Bob success by Monte Carlo against canonical procedural strategy API.
+
+    ``k_box=0`` is supported as the no-PR-box baseline. In that case, no
+    ``measure_a`` calls are required and Bob decisions depend only on gun index
+    and Alice's communication bit.
+    """
     start_time = time.perf_counter() if record_time else None
 
     n2, k_box, eff_limit = _validate_inputs(

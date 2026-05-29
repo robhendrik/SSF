@@ -42,7 +42,11 @@ class StrategyCandidate:
 
 @dataclass(frozen=True)
 class EvaluationRequest:
-    """Immutable request for evaluator dispatch and optional cache lookup."""
+    """Immutable request for evaluator dispatch and optional cache lookup.
+
+    Notes:
+    - ``box_limit`` and ``subset_policy`` are supported only for ``dense_exhaustive`` mode.
+    """
 
     candidate: StrategyCandidate
     p_rule: float
@@ -97,6 +101,24 @@ def _evaluate_candidate_uncached(request: EvaluationRequest) -> EvaluationResult
     if not (0.0 <= p_rule <= 1.0):
         raise ValueError(f"p_rule must be in [0, 1], got {request.p_rule}.")
 
+    if request.subset_policy not in ("up_to", "exact"):
+        raise ValueError(f"subset_policy must be 'up_to' or 'exact', got {request.subset_policy}.")
+
+    box_limit = request.box_limit
+    if box_limit is not None:
+        if not isinstance(box_limit, int) or isinstance(box_limit, bool):
+            raise ValueError("box_limit must be an int or None.")
+        if box_limit < 0 or box_limit > spec.k_box:
+            raise ValueError(
+                f"box_limit must satisfy 0 <= box_limit <= k_box ({spec.k_box}), got {box_limit}."
+            )
+
+    if request.mode != "dense_exhaustive":
+        if box_limit is not None or request.subset_policy != "up_to":
+            raise ValueError(
+                "box_limit/subset_policy restrictions are supported only for mode='dense_exhaustive'."
+            )
+
     if request.mode == "analytical":
         analytical = analytical_win_rate(spec, p_rule)
         return EvaluationResult(
@@ -112,7 +134,7 @@ def _evaluate_candidate_uncached(request: EvaluationRequest) -> EvaluationResult
         success = evaluate_strategy_exhaustive(
             fixture.as_strategy_dict(),
             p_rule,
-            box_limit=request.box_limit,
+            box_limit=box_limit,
             subset_policy=request.subset_policy,
         )
         return EvaluationResult(
@@ -128,8 +150,6 @@ def _evaluate_candidate_uncached(request: EvaluationRequest) -> EvaluationResult
         mc = evaluate_strategy_mc(
             fixture.as_strategy_dict(),
             p_rule,
-            box_limit=request.box_limit,
-            subset_policy=request.subset_policy,
             n_train_samples=request.n_train_samples,
             n_eval_samples=request.n_eval_samples,
             confidence=request.confidence,
@@ -151,8 +171,6 @@ def _evaluate_candidate_uncached(request: EvaluationRequest) -> EvaluationResult
         mc = evaluate_strategy_mc_procedural(
             strategy,
             p_rule,
-            box_limit=request.box_limit,
-            subset_policy=request.subset_policy,
             n_train_samples=request.n_train_samples,
             n_eval_samples=request.n_eval_samples,
             confidence=request.confidence,
@@ -183,6 +201,7 @@ def evaluate_candidate(
     - single optimizer-facing API for all backends and cache behavior
 
     Failure behavior:
+    - validates dense-exhaustive restriction knobs centrally
     - propagates validation/backend errors from request validation and evaluators
     """
     # Lazy import avoids circular dependency: strategy_cache imports strategy_evaluation.
